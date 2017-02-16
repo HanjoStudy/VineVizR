@@ -11,3 +11,4 @@ knitr::opts_chunk$set(echo = TRUE)
 
 - Start using `testthat` for package management
 - Have a look at the praise tha package
+- When starting any project, first start the repo on github and then use this with the project set up 
