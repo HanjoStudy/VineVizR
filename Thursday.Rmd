@@ -9,6 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Jenny Bryan
 
+http://happygitwithr.com/
+www.starlogs.net
+
 - Start using `testthat` for package management
 - Have a look at the praise tha package
 - When starting any project, first start the repo on github and then use this with the project set up 
