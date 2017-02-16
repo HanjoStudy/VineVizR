@@ -12,7 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 http://happygitwithr.com/
 www.starlogs.net
 
+- gitkraken or sourcetree
 - Start using `testthat` for package management
 - Have a look at the praise tha package
 - When starting any project, first start the repo on github and then use this with the project set up 
 - ALWAYS pull before starting your work again
+- ALWAYS push your png figures to github and use the feature on github to check differences in picture!!
+
+How to organise your folders in git
+https://github.com/jennybc/gapminder/tree/master/data-raw
