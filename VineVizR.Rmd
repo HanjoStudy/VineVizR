@@ -29,6 +29,28 @@ load_pkg(c(
 
 ```
 
+```{r, data_wrangling}
+RVM <- readRDS("data/RVM.rds")
+
+Market_info <- read.csv("data/Market_info.csv", stringsAsFactors = F)
+Market_info <- 
+  Market_info %>% mutate(Year1_Move = cut(X1.Year..Move,
+                                       c("-Inf", 
+                                          quantile(X1.Year..Move), 
+                                          "Inf"),
+                                       labels = c("Worst", "Negative", "Average", "Pos ret", "High ret", "Best")),
+                       Year5_Move = cut(X5.year..Move,
+                                       c("-Inf", 
+                                          quantile(X5.year..Move), 
+                                          "Inf"),
+                                       labels = c("Worst", "Negative", "Average", "Pos ret", "High ret", "Best")),
+                       MCapBillion = cut(Market.Cap/1e+09,
+                                       c("-Inf", 
+                                          quantile(Market.Cap)/1e+09, 
+                                          "Inf")
+                                       ))
+
+```
 
 
 
@@ -48,11 +70,17 @@ Column
 require(visNetwork, quietly = TRUE)
 # minimal example
 
+
 if (input$group == "Market Cap")
 {
-    group <- 
-    group.size <- 
-    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+    group <- Market_info$MCapBillion %>% as.character()
+    group.size <-  
+      Market_info %>% 
+      group_by(MCapBillion) %>%
+      summarise(n = n()) %>% 
+      select(n) %>% unlist
+      
+    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973","#39c973","#39c973")
 } else if (input$group == "Industry"){
     group <- 
     group.size <- 
@@ -69,8 +97,6 @@ colours <- colorspace::rainbow_hcl(3)
 #pie(rep(1,12), col=colours) 
 
 renderVisNetwork({
-  RVM <- readRDS("data/RVM.rds")
-
   VisVineR(
     RVM,
     group = c("Fin", "Retail", "IT"),

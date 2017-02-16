@@ -4,3 +4,4 @@
 .Ruserdata
 
 /data/*
+!/data/Market_info.csv
