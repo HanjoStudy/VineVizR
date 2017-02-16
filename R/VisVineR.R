@@ -27,16 +27,12 @@ VisVineR <-
       group.size <- 1
     } else if(!missing(group) & !missing(group.size))
     {
-      if(length(group) != length(group.size) )
-        stop("Parameters group and group.size not equal length!")
+      # if(length(group) != length(group.size) )
+      #   stop("Parameters group and group.size not equal length!")
       
       if(sum(group.size) != length(RVM$names))
         stop("Parameter group.size not well specifed as sum of group size not equal to number variables in RVineMatrix!")
     }
-    
-    sink(tempfile())
-    rvineSummary <- summary(RVM)
-    sink()
     
     if (missing(colours)) {
       colours <- colorspace::rainbow_hcl(length(group.size))
@@ -51,12 +47,26 @@ VisVineR <-
       }
     }
     
+    sink(tempfile())
+      rvineSummary <- summary(RVM)
+    sink()
+    
+    # Deal with colour matching
+    group_match <- unique(group) %>% sort(decreasing = T)
+    matchedColor <- 
+      cbind(group_match, key = seq(1:length(group_match))) %>%
+      as_data_frame() %>% 
+      left_join(.,
+        cbind(key = seq(1:length(group_match)), colours) %>% as_data_frame(), 
+        by = "key") %>% 
+      left_join(group %>% as_data_frame(),., by = c("value" = "group_match"))
+    
+    
     if (length(shape) != length(group.size) | length(shape) == 1) {
       shape  <- rep(shape, sum(group.size))
     } else {
       shape <- rep(shape, group.size)
     }
-    
     
     
     tau <-
@@ -68,9 +78,9 @@ VisVineR <-
         title = rvineSummary$names,
         shape = shape,
         size = 15,
-        color = rep(colours, group.size),
+        color = matchedColor$colours,
         # group  = c(rep("Fin", 4), rep("energy", 4), rep("Ind", 2))
-        group  = rep(group, group.size)
+        group = group
       )
     
     from <- diag(RVM$Matrix)[-length(diag(RVM$Matrix))]
@@ -91,7 +101,7 @@ VisVineR <-
         visLegend(
           useGroups = FALSE,
           addNodes = data.frame(
-            label = group,
+            label = group_match,
             shape = "circle",
             color = colours, 
             clickToUse = T

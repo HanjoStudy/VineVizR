@@ -58,7 +58,7 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "Volatility"))
+selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "Volatility", "1 Year Performance","5 Year Performance"))
 
 numericInput('seed', 'Random formation seed', 3, 
               min = 1, max = 999)
@@ -80,28 +80,39 @@ if (input$group == "Market Cap")
       summarise(n = n()) %>% 
       select(n) %>% unlist
       
-    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973","#39c973","#39c973")
+    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973","#c93947", "#bb39c9")
 } else if (input$group == "Industry"){
-    group <- 
-    group.size <- 
+    group <- Market_info$Hanjo.Industry %>% as.character()
+    group.size <-  
+      Market_info %>% 
+      group_by(Hanjo.Industry) %>%
+      summarise(n = n()) %>% 
+      select(n) %>% unlist 
     colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
-} else if (input$group == "X Month Performance"){
-    group <- 
-    group.size <- 
+} else if (input$group == "1 Year Performance"){
+    group <- Market_info$Year1_Move %>% as.character()
+    group.size <-  
+      Market_info %>% 
+      group_by(Year1_Move) %>%
+      summarise(n = n()) %>% 
+      select(n) %>% unlist 
+    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+} else if (input$group == "5 Year Performance"){
+    group <- Market_info$Year5_Move %>% as.character()
+    group.size <-  
+      Market_info %>% 
+      group_by(Year5_Move) %>%
+      summarise(n = n()) %>% 
+      select(n) %>% unlist 
     colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
 }
-
-
-colours <- colorspace::rainbow_hcl(3)
-
-#pie(rep(1,12), col=colours) 
 
 renderVisNetwork({
   VisVineR(
     RVM,
-    group = c("Fin", "Retail", "IT"),
-    group.size = c(12, 9, 2),
-    seed = 5, 
+    group = group,
+    group.size = group.size,
+    seed = 20, 
     colours = colours
     )
   })
