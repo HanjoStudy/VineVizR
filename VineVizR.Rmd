@@ -10,8 +10,6 @@ runtime: shiny
 
 ```{r global, include=FALSE}
 # load data in 'global' chunk so it can be shared by all users of the dashboard
-library(datasets)
-data(iris)
 
 for(i in list.files("R/", full.names = T)) source(i)
 
@@ -38,13 +36,10 @@ Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-selectInput('xcol', 'X Variable', names(iris))
-    
-selectInput('ycol', 'Y Variable', names(iris),
-                selected=names(iris)[[2]])
-    
-numericInput('clusters', 'Cluster count', 3,
-              min = 1, max = 9)
+selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "Volatility"))
+
+numericInput('seed', 'Random formation seed', 3, 
+              min = 1, max = 999)
 ```
 
 Column
@@ -53,8 +48,23 @@ Column
 require(visNetwork, quietly = TRUE)
 # minimal example
 
+if (input$group == "Market Cap")
+{
+    group <- 
+    group.size <- 
+    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+} else if (input$group == "Industry"){
+    group <- 
+    group.size <- 
+    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+} else if (input$group == "X Month Performance"){
+    group <- 
+    group.size <- 
+    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+}
 
-colour_try <- colorspace::rainbow_hcl(23)
+
+colours <- colorspace::rainbow_hcl(3)
 
 #pie(rep(1,12), col=colours) 
 
@@ -66,7 +76,7 @@ renderVisNetwork({
     group = c("Fin", "Retail", "IT"),
     group.size = c(12, 9, 2),
     seed = 5, 
-    colours = colour_try
+    colours = colours
     )
   })
 

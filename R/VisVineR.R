@@ -41,7 +41,7 @@ VisVineR <-
     if (missing(colours)) {
       colours <- colorspace::rainbow_hcl(length(group.size))
     } else {
-      if (length(colours) != sum(group.size)) {
+      if (length(colours) != length(group.size)) {
         message(
           "Number of colours specified not equal to number of group size, using default colours\n")
         
