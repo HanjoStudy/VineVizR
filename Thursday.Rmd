@@ -1,5 +1,5 @@
 ---
-title: "Thursday"
+title: "satRday Talks"
 output: html_document
 ---
 
@@ -21,3 +21,16 @@ www.starlogs.net
 
 How to organise your folders in git
 https://github.com/jennybc/gapminder/tree/master/data-raw
+
+# Stephe Loche
+
+- h20.enemble
+  - specify learners and get to treain all in one go
+- Check for missing data : library(Amelia), missmap(X)
+- Looks for the break in continous where the samples do significantly differ between your predictive class: library(smbinning)
+  - smbinning.gen()
+- giniChart()
+-
+  
+# Shiny
+http://brooksandrew.github.io/simpleblog/articles/deploying-apps-with-shinyapps-io/

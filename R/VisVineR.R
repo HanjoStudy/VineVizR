@@ -15,7 +15,7 @@ VisVineR <-
              "text",
              "diamond"
            )[1],
-           nodesIdSelection = F, seed = 314) {
+           nodesIdSelection = F, seed = 3141) {
     
     if (class(RVM) != "RVineMatrix")
       stop("Object Not RVineMatrix!")
@@ -79,7 +79,6 @@ VisVineR <-
         shape = shape,
         size = 15,
         color = matchedColor$colours,
-        # group  = c(rep("Fin", 4), rep("energy", 4), rep("Ind", 2))
         group = group
       )
     
@@ -97,7 +96,7 @@ VisVineR <-
     
     if (length(group) != 1)
     {
-      x  <- visNetwork(nodes, edges, height = "500px", width = "100%") %>%
+      x  <- visNetwork(nodes, edges, height = "100%", width = "100%") %>%
         visLegend(
           useGroups = FALSE,
           addNodes = data.frame(

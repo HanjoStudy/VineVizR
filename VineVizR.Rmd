@@ -1,5 +1,5 @@
 ---
-title: "Iris K-Means Clustering"
+title: "VineVisR"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -23,13 +23,14 @@ load_pkg(c(
   "PerformanceAnalytics",
   "rugarch",
   "VineCopula",
-  "visNetwork"
+  "visNetwork",
+  "DT"
 ))
 
 
 ```
 
-```{r, data_wrangling}
+```{r, data_wrangling, include = F}
 RVM <- readRDS("data/RVM.rds")
 
 Market_info <- read.csv("data/Market_info.csv", stringsAsFactors = F)
@@ -52,70 +53,157 @@ Market_info <-
 
 ```
 
-
+Vine Visualizations
+============================================================
 
 Column {.sidebar}
 -----------------------------------------------------------------------
 
 ```{r}
-selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "Volatility", "1 Year Performance","5 Year Performance"))
+selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "1 Year Performance","5 Year Performance"))
+
+selectInput('group2', 'Generate Grouping2', c("Market Cap", "Industry", "1 Year Performance","5 Year Performance"))
 
 numericInput('seed', 'Random formation seed', 3, 
               min = 1, max = 999)
+
 ```
 
-Column
------------------------------------------------------------------------
+
 ```{r}
 require(visNetwork, quietly = TRUE)
-# minimal example
+
+# First Vine
+
+params <- reactive({
+    if (input$group == "Market Cap")
+    {
+        group <- Market_info$MCapBillion %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(MCapBillion) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist
+        colours <- c("#39c9bb", 	"#398fc9", 	"#39c973","#c93947", "#bb39c9")
+        
+        list(group, group.size, colours)
+    } else if (input$group == "Industry"){
+        group <- Market_info$Hanjo.Industry %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(Hanjo.Industry) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist 
+        colours <- c("#39c9bb", "#398fc9", "#39c973"," #bb39c9", 	"#c9bb39")
+        
+        list(group, group.size, colours)
+    } else if (input$group == "1 Year Performance"){
+        group <- Market_info$Year1_Move %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(Year1_Move) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist 
+        colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+        
+        list(group, group.size, colours)
+    } else if (input$group == "5 Year Performance"){
+        group <- Market_info$Year5_Move %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(Year5_Move) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist 
+        colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+        
+        list(group, group.size, colours)
+    }
+  })
 
 
-if (input$group == "Market Cap")
-{
-    group <- Market_info$MCapBillion %>% as.character()
-    group.size <-  
-      Market_info %>% 
-      group_by(MCapBillion) %>%
-      summarise(n = n()) %>% 
-      select(n) %>% unlist
-      
-    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973","#c93947", "#bb39c9")
-} else if (input$group == "Industry"){
-    group <- Market_info$Hanjo.Industry %>% as.character()
-    group.size <-  
-      Market_info %>% 
-      group_by(Hanjo.Industry) %>%
-      summarise(n = n()) %>% 
-      select(n) %>% unlist 
-    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
-} else if (input$group == "1 Year Performance"){
-    group <- Market_info$Year1_Move %>% as.character()
-    group.size <-  
-      Market_info %>% 
-      group_by(Year1_Move) %>%
-      summarise(n = n()) %>% 
-      select(n) %>% unlist 
-    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
-} else if (input$group == "5 Year Performance"){
-    group <- Market_info$Year5_Move %>% as.character()
-    group.size <-  
-      Market_info %>% 
-      group_by(Year5_Move) %>%
-      summarise(n = n()) %>% 
-      select(n) %>% unlist 
-    colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
-}
 
+params2 <- reactive({
+    if (input$group2 == "Market Cap")
+    {
+        group <- Market_info$MCapBillion %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(MCapBillion) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist
+        colours <- c("#39c9bb", 	"#398fc9", 	"#39c973","#c93947", "#bb39c9")
+        
+        list(group, group.size, colours)
+    } else if (input$group2 == "Industry"){
+        group <- Market_info$Hanjo.Industry %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(Hanjo.Industry) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist 
+        colours <- c("#ff4040",	"#ffa040", "#ff40a0", "#40ffff", "#4040ff", "#40ff40")
+        
+        list(group, group.size, colours)
+    } else if (input$group2 == "1 Year Performance"){
+        group <- Market_info$Year1_Move %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(Year1_Move) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist 
+        colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+        
+        list(group, group.size, colours)
+    } else if (input$group2 == "5 Year Performance"){
+        group <- Market_info$Year5_Move %>% as.character()
+        group.size <-  
+          Market_info %>% 
+          group_by(Year5_Move) %>%
+          summarise(n = n()) %>% 
+          select(n) %>% unlist 
+        colours <- c("#39c9bb", 	"#398fc9", 	"#39c973")
+        
+        list(group, group.size, colours)
+    }
+  })
+
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+```{r}
+#Add copula type in Viz
 renderVisNetwork({
   VisVineR(
     RVM,
-    group = group,
-    group.size = group.size,
-    seed = 20, 
-    colours = colours
+    group = params()[[1]],
+    group.size = params()[[2]],
+    seed = input$seed, 
+    colours = params()[[3]]
     )
   })
 
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+```{r}
+#Add copula type in Viz
+renderVisNetwork({
+  VisVineR(
+    RVM,
+    group = params2()[[1]],
+    group.size = params2()[[2]],
+    seed = input$seed, 
+    colours = params2()[[3]]
+    )
+  })
+
+```
+
+Underlying data
+============================================================
+```{r}
+datatable(Market_info, options = list(pageLength = 10))
 ```
 
