@@ -1,34 +1,168 @@
 ---
 title: "VineVisR"
-output: 
+resource_files:
+- R/load_pkgs.R
+- R/VisVineR.R
+runtime: shiny
+output:
   flexdashboard::flex_dashboard:
     orientation: columns
     social: menu
     source_code: embed
-runtime: shiny
 ---
-
 ```{r global, include=FALSE}
-# load data in 'global' chunk so it can be shared by all users of the dashboard
-grgr
+
 for(i in list.files("R/", full.names = T)) source(i)
 
-# Download Top40 on JSE
-load_pkg(c(
-  "dplyr", 
-  "tidyr",
-  "tibble",
-  "ggplot2",
-  "quantmod",
-  "PerformanceAnalytics",
-  "rugarch",
-  "VineCopula",
-  "visNetwork",
-  "DT"
-))
+{
+  library(dplyr)
+  library(tibble)
+  library(tidyr)
+  library(ggplot2)
+  library(VineCopula)
+  library(DT)
+}
+```
 
+```{r functions}
+load_pkg <- function(packagelist) {
+  
+    # Check if any package needs installation:
+  PackagesNeedingInstall <- packagelist[!(packagelist %in% installed.packages()[,"Package"])]
+  if(length(PackagesNeedingInstall))
+  {
+    cat("\nInstalling necesarry packages: ", paste0(PackagesNeedingInstall,collapse = ", "), "\n")
+    install.packages(PackagesNeedingInstall, dependencies = T)
+  }
+  # load packages into R:
+  x <- 
+  suppressPackageStartupMessages(lapply(packagelist, require, character.only = TRUE, quietly = T))
+}
+
+VisVineR <-
+  function(RVM,
+           group,
+           group.size,
+           colours,
+           shape = c(
+             "square",
+             "triangle",
+             "box",
+             "circle",
+             "dot",
+             "star",
+             "ellipse",
+             "database",
+             "text",
+             "diamond"
+           )[1],
+           nodesIdSelection = F, seed = 3141) {
+    
+    if (class(RVM) != "RVineMatrix")
+      stop("Object Not RVineMatrix!")
+    
+    
+    if(missing(group) & missing(group.size))
+    {
+      group <- 1
+      group.size <- 1
+    } else if(!missing(group) & !missing(group.size))
+    {
+      # if(length(group) != length(group.size) )
+      #   stop("Parameters group and group.size not equal length!")
+      
+      if(sum(group.size) != length(RVM$names))
+        stop("Parameter group.size not well specifed as sum of group size not equal to number variables in RVineMatrix!")
+    }
+    
+    if (missing(colours)) {
+      colours <- colorspace::rainbow_hcl(length(group.size))
+    } else {
+      if (length(colours) != length(group.size)) {
+        message(
+          "Number of colours specified not equal to number of group size, using default colours\n")
+        
+        print(length(group.size))
+        colours <- colorspace::rainbow_hcl(length(group.size))
+        print(colours)
+      }
+    }
+    
+    sink(tempfile())
+      rvineSummary <- summary(RVM)
+    sink()
+    
+    # Deal with colour matching
+    group_match <- unique(group) %>% sort(decreasing = T)
+    matchedColor <- 
+      cbind(group_match, key = seq(1:length(group_match))) %>%
+      as_data_frame() %>% 
+      left_join(.,
+        cbind(key = seq(1:length(group_match)), colours) %>% as_data_frame(), 
+        by = "key") %>% 
+      left_join(group %>% as_data_frame(),., by = c("value" = "group_match"))
+    
+    
+    if (length(shape) != length(group.size) | length(shape) == 1) {
+      shape  <- rep(shape, sum(group.size))
+    } else {
+      shape <- rep(shape, group.size)
+    }
+    
+    
+    tau <-
+      rvineSummary$tau[nrow(rvineSummary$tau), -ncol(rvineSummary$tau)]
+    
+    nodes <-
+      data.frame(
+        id = rvineSummary$names,
+        title = rvineSummary$names,
+        shape = shape,
+        size = 15,
+        color = matchedColor$colours,
+        group = group
+      )
+    
+    from <- diag(RVM$Matrix)[-length(diag(RVM$Matrix))]
+    to <- c(tail(RVM$Matrix, 1))[-length(tail(RVM$Matrix, 1))]
+    
+    
+    edges <-
+      data.frame(
+        from = rvineSummary$names[from],
+        to = rvineSummary$names[to],
+        value = 3,
+        label = round(tau, 2)
+      )
+    
+    if (length(group) != 1)
+    {
+      x  <- visNetwork(nodes, edges, height = "100%", width = "100%") %>%
+        visLegend(
+          useGroups = FALSE,
+          addNodes = data.frame(
+            label = group_match,
+            shape = "circle",
+            color = colours, 
+            clickToUse = T
+          )
+        ) %>%
+        visOptions(highlightNearest = TRUE, nodesIdSelection = nodesIdSelection) %>%
+        visLayout(randomSeed = seed)
+    } else {
+      x  <- visNetwork(nodes, edges, height = "500px", width = "100%", zoom = 3) %>%
+        visOptions(highlightNearest = TRUE, nodesIdSelection = nodesIdSelection) %>%
+        visLayout(randomSeed = seed)
+    }
+    x
+    # Save to html
+    
+    # visSave(x, file = "network.html")
+    
+  }
 
 ```
+
 
 ```{r, data_wrangling, include = F}
 RVM <- readRDS("data/RVM.rds")
@@ -50,6 +184,17 @@ Market_info <-
                                           quantile(Market.Cap)/1e+09, 
                                           "Inf")
                                        ))
+shape  <- c("square",
+  "triangle",
+  "box",
+  "circle",
+  "dot",
+  "star",
+  "ellipse",
+  "database",
+  "text",
+  "diamond"
+  )
 
 ```
 
@@ -64,8 +209,23 @@ selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "1 Year Pe
 
 selectInput('group2', 'Generate Grouping2', c("Market Cap", "Industry", "1 Year Performance","5 Year Performance"))
 
+selectInput('shape', 'Choose shape', shape)
+
 numericInput('seed', 'Random formation seed', 3, 
               min = 1, max = 999)
+
+shape  <- c(
+  "square",
+  "triangle",
+  "box",
+  "circle",
+  "dot",
+  "star",
+  "ellipse",
+  "database",
+  "text",
+  "diamond"
+  )
 
 ```
 
@@ -179,7 +339,8 @@ renderVisNetwork({
     group = params()[[1]],
     group.size = params()[[2]],
     seed = input$seed, 
-    colours = params()[[3]]
+    colours = params()[[3]],
+    shape = input$shape
     )
   })
 
@@ -194,8 +355,9 @@ renderVisNetwork({
     RVM,
     group = params2()[[1]],
     group.size = params2()[[2]],
+    colours = params2()[[3]],
     seed = input$seed, 
-    colours = params2()[[3]]
+    shape = input$shape
     )
   })
 
