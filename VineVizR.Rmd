@@ -1,5 +1,5 @@
 ---
-title: "VineVisR"
+title: "VineVisR: Dependence exploration of South African Top40 companies"
 resource_files:
 - R/load_pkgs.R
 - R/VisVineR.R
@@ -9,6 +9,8 @@ output:
     orientation: columns
     social: menu
     source_code: embed
+    vertical_layout: scroll
+    theme: "spacelab"
 ---
 ```{r global, include=FALSE}
 
@@ -21,6 +23,7 @@ for(i in list.files("R/", full.names = T)) source(i)
   library(ggplot2)
   library(VineCopula)
   library(DT)
+  library(shinythemes)
 }
 ```
 
@@ -198,12 +201,14 @@ shape  <- c("square",
 
 ```
 
-Vine Visualizations
+Vine Visualizations {data-icon="fa-tree"}
 ============================================================
 
-Column {.sidebar}
+Column {.sidebar data-width=300}
 -----------------------------------------------------------------------
-
+### ABOUT
+__About Vines:__
+A vine is a graphical tool for labeling constraints in high-dimensional probability distributions. In finance, vine copulas have been shown to effectively model tail risk in portfolio optimization applications as well as discover complex dependence structures. More information can be found [here](http://www.statistics.ma.tum.de/en/research/vine-copula-models/)
 ```{r}
 selectInput('group', 'Generate Grouping', c("Market Cap", "Industry", "1 Year Performance","5 Year Performance"))
 
@@ -226,7 +231,6 @@ shape  <- c(
   "text",
   "diamond"
   )
-
 ```
 
 
@@ -333,16 +337,16 @@ Column {data-width=650}
 -----------------------------------------------------------------------
 ```{r}
 #Add copula type in Viz
-renderVisNetwork({
-  VisVineR(
-    RVM,
-    group = params()[[1]],
-    group.size = params()[[2]],
-    seed = input$seed, 
-    colours = params()[[3]],
-    shape = input$shape
-    )
-  })
+        renderVisNetwork({
+            VisVineR(
+              RVM,
+              group = params()[[1]],
+              group.size = params()[[2]],
+              seed = input$seed, 
+              colours = params()[[3]],
+              shape = input$shape
+              )
+            })
 
 ```
 
@@ -363,9 +367,11 @@ renderVisNetwork({
 
 ```
 
-Underlying data
+
+Underlying data {data-icon="fa-database"}
 ============================================================
 ```{r}
 datatable(Market_info, options = list(pageLength = 10))
 ```
+
 
