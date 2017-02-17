@@ -201,7 +201,7 @@ shape  <- c("square",
 
 ```
 
-Vine Visualizations {data-icon="fa-tree"}
+Vine Visualizations {data-icon="fa-code-fork"}
 ============================================================
 
 Column {.sidebar data-width=300}
