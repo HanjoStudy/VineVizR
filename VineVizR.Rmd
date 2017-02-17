@@ -10,7 +10,7 @@ runtime: shiny
 
 ```{r global, include=FALSE}
 # load data in 'global' chunk so it can be shared by all users of the dashboard
-
+grgr
 for(i in list.files("R/", full.names = T)) source(i)
 
 # Download Top40 on JSE
