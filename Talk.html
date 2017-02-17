@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SatRday</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="Talk_files/rmdshower/node_modules/shower-ribbon/styles/screen-16x10.css">
+  <link rel="stylesheet" href="Talk_files/rmdshower/package/styles/screen-16x10.css">
+  <link rel="stylesheet" href="Talk_files/rmdshower/style-common.css">
+  <link rel="stylesheet" href="Talk_files/rmdshower/style-ribbon.css">
+  <link rel="stylesheet" href="Talk_files/rmdshower/style-override.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+  <script src="Talk_files/rmdshower/auto-render.min.js" type="text/javascript"></script>
+  
+  
+  
+  
+  
+</head>
+
+<body class="shower list">
+
+  <header class="caption">
+    <h1>SatRday</h1>
+    <p>Hanjo Odendaal</p>
+  </header>
+
+    
+  
+<section id="satrday-2017---cape-town" class="slide level2 white">
+<h2>SatRday 2017 - Cape Town</h2>
+<img src="cape_town.jpg" class="cover">
+<p class="white">
+Visual inference for high-dimensional Vine Copulas
+</p>
+<!-- ## Definition of Copulas -->
+<!-- > Every multivariate cumulative distribution function -->
+<!-- > of any random vector can be expressed in terms of  -->
+<!-- > its own marginals and a joint Copula -->
+<!-- **Abe Sklar ** -->
+</section>
+<section id="definition-of-copulas" class="slide level2">
+<h2>Definition of Copulas</h2>
+<p class="double">
+<img src="paranormaldistribution.png" class="one-col-image"> “Copulas are statistical tools that allow us to compare apples and oranges”
+</p>
+</section>
+<section id="fields-where-copulas-are-applied" class="slide level2">
+<h2>Fields where copulas are applied</h2>
+<ul>
+<li>Quantitative finance</li>
+<li>Stress-tests and robustness checks</li>
+<li>“Downside/crisis/panic regimes” where extreme downside events are important</li>
+<li>Pool of asset evaluation</li>
+<li>Civil engineering</li>
+<li>Warranty data analysis</li>
+<li>Turbulent combustion</li>
+<li>Medicine</li>
+</ul>
+</section>
+<section id="quick-introduction-to-copulas-place-within-fin.-metrics" class="slide level2">
+<h2>Quick introduction to copulas’ place within fin. metrics</h2>
+<ul>
+<li>Within financial econometrics we use a vast array of models to capture co-movements in the asset markets</li>
+<li>Theoretical problem arises when we talk about <strong>dependence</strong>
+<ul>
+<li>Linear correlation is only appropriate when the dependence structure (or joint distribution) follow a normal distribution</li>
+</ul></li>
+</ul>
+</section>
+<section id="sklars-theorem" class="slide level2 smaller">
+<h2>Sklar’s theorem</h2>
+<p><strong>Definition (Copula):</strong></p>
+<p><span class="math display">\[C(u_1, \ldots, u_d) = P(U_1 \leq u_1, \ldots, U_d \leq u_d), (u_1, \ldots, u_d) \in (0,1)^d\]</span></p>
+<p>Thus Sklar’s theorem states:</p>
+<p><span class="math display">\[C(F_1(x_1), \ldots,F_d(x_d)) = P(U_1 \leq F_1(x_1), \ldots, U_d \leq F_d(x_d))\]</span> <span class="math display">\[                             = P(F_1^{-1}(U_1) \leq x_1, \ldots, F_d^{-1}(U_d) \leq x_d)\]</span> <span class="math display">\[                             = F(x_1, \ldots, x_d)\]</span></p>
+</section>
+<section id="but-what-if-we-visualise-this" class="slide level2">
+<h2>But what if we visualise this?</h2>
+</section>
+<section id="normal" class="slide level2">
+<h2>Normal</h2>
+<p><img src="Talk_files/figure-revealjs/unnamed-chunk-3-1.png" width="384" /><img src="Talk_files/figure-revealjs/unnamed-chunk-3-2.png" width="384" /></p>
+</section>
+<section id="gumbel" class="slide level2">
+<h2>Gumbel</h2>
+<p><img src="Talk_files/figure-revealjs/unnamed-chunk-4-1.png" width="384" /><img src="Talk_files/figure-revealjs/unnamed-chunk-4-2.png" width="384" /></p>
+</section>
+<section id="clayton" class="slide level2">
+<h2>Clayton</h2>
+<p><img src="Talk_files/figure-revealjs/unnamed-chunk-5-1.png" width="384" /><img src="Talk_files/figure-revealjs/unnamed-chunk-5-2.png" width="384" /></p>
+</section>
+<section id="if-its-too-good-to-be-true-then-it-probably-is" class="slide level2">
+<h2>If its too good to be true, then it probably is</h2>
+<p class="double">
+<p><img src="curse.jpg" class="one-col-image"></p>
+<ul>
+<li>Portfolios, systems etc are not bi-variate</li>
+<li>Curse of dimensionality has once again become a problem</li>
+<li>Enter Vines</li>
+</ul>
+</p>
+</section>
+<section id="lets-look-at-some-of-these-vines" class="titleslide slide level1"><h2 class="shout">Lets look at some of these “vines”</h2></section><section id="vinecopula-package-output" class="slide level2">
+<h2>VineCopula package output</h2>
+<p><img src="Talk_files/figure-revealjs/unnamed-chunk-6-1.png" width="384" /></p>
+</section><section id="visual-inference" class="slide level2">
+<h2>Visual inference…</h2>
+<p>Anyone care to <a href="https://hanjo.shinyapps.io/VineVizR/">comment</a>?</p>
+<blockquote>
+<p><a href="https://hanjo.shinyapps.io/VineVizR/" class="uri">https://hanjo.shinyapps.io/VineVizR/</a></p>
+</blockquote>
+</section><section id="conclusion" class="slide level2">
+<h2>Conclusion</h2>
+<p>As we climb up the ladder of complexity, the importance of communication within the analytical flow needs to be elevated.</p>
+<p>We can no longer keep building higher walls to keep people out. Well, figurative walls where people are not correctly conveyed the information as the analysis is presented in a complex manner.</p>
+<p>If you can succecfully convey to someone why u are exited in an informative, easy and comphrensible way - they too will get excited with you.</p>
+</section><section id="note" class="slide level2">
+<h2>Note</h2>
+<p>If you are interested in learning more about dependence modelling and copulas in specific</p>
+<ul>
+<li><a href="https://caperuser.wordpress.com/">R/Finance Cape Town group</a></li>
+<li>Talk about copula modeling and its application in growing independence among enery markets in multiple universes. <a href="https://www.eventbrite.com/e/rfinance-cape-r-user-march-meetup-tickets-31987161461">here</a></li>
+</ul>
+</section>
+
+  <!--
+  To hide progress bar from entire presentation
+  just remove “progress” element.
+  -->
+  <!-- <div class="progress"></div> -->
+  <script src="Talk_files/rmdshower/node_modules/shower/node_modules/shower-core/shower.min.js"></script>
+  <!-- Copyright © 2015 Yours Truly, Famous Inc. -->
+  <!-- Photos by John Carey, fiftyfootshadows.net -->
+
+    <script>renderMathInElement(document.body);</script>
+  
+  
+</body>
+</html>
