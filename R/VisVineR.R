@@ -1,20 +1,50 @@
+#' @title VisVineR
+#' @description Interface that uses a \code{RVineMatrix} object that can be displayed using \code{visNetworks}    
+#' @param RVM RVineMatrix object
+#' @param group a vector containing the name of the groups (by default, groups are 1)
+#' @param group.size a vector with the number of variables in each group
+#' @param colours a vector of length equal to \code{group.size} specifying colours for each group
+#' @param shape parameter specifying node shape
+#' @param seed formation seed
+#' @examples 
+#' 
+#' load_pkg(c("dplyr", "visNetwork", "tidyr", "VineCopula"))
+#' 
+#' group <- Market_info$Hanjo.Industry %>% as.character()
+#' group.size <-  
+#'  Market_info %>% 
+#'  group_by(Hanjo.Industry) %>%
+#'  summarise(n = n()) %>% 
+#'  select(n) %>% unlist 
+#' colours <- c("#39c9bb", "#398fc9", "#39c973"," #bb39c9", 	"#c9bb39")
+#' 
+#' VisVineR(
+#'  RVM,
+#'  group = group,
+#'  group.size = group.size,
+#'  seed = seed,
+#'  colours = colours,
+#'  shape = shape,
+#'  seed = 50)
+#' 
+#' @return Packages loaded into R
+#' @references \url{http://datastorm-open.github.io/visNetwork/}
+#' @export
+
 VisVineR <-
   function(RVM,
            group,
            group.size,
            colours,
-           shape = c(
-             "square",
-             "triangle",
-             "box",
-             "circle",
-             "dot",
-             "star",
-             "ellipse",
-             "database",
-             "text",
-             "diamond"
-           )[1],
+           shape = c("square", 
+                     "triangle", 
+                     "box", 
+                     "circle", 
+                     "dot",
+                     "star",
+                     "ellipse",
+                     "database", 
+                     "text", "diamond")[1],
            nodesIdSelection = F, seed = 3141) {
     
     if (class(RVM) != "RVineMatrix")
@@ -45,6 +75,14 @@ VisVineR <-
         colours <- colorspace::rainbow_hcl(length(group.size))
         print(colours)
       }
+    }
+    
+    shape_check <- c("square", "triangle", "box", "circle", "dot","star",
+              "ellipse", "database", "text", "diamond")
+    
+    if(!(shape %in% shape_check)){
+      message(paste0("Shape '", shape,"' not valid option, defaulting to squar"))
+      shape <- "sqaure"
     }
     
     sink(tempfile())
@@ -109,7 +147,12 @@ VisVineR <-
         visOptions(highlightNearest = TRUE, nodesIdSelection = nodesIdSelection) %>%
         visLayout(randomSeed = seed)
     } else {
-      x  <- visNetwork(nodes, edges, height = "500px", width = "100%", zoom = 3) %>%
+      x  <-
+        visNetwork(nodes,
+                   edges,
+                   height = "500px",
+                   width = "100%",
+                   zoom = 3) %>%
         visOptions(highlightNearest = TRUE, nodesIdSelection = nodesIdSelection) %>%
         visLayout(randomSeed = seed)
     }
