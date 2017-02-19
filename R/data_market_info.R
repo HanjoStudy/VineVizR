@@ -3,7 +3,7 @@
 #' The 23 companies in the Top40 index of South Africa that analysis was 
 #' conducted on and their meta data.
 #' 
-#' @usage data(RVM)
+#' @usage data(Market_info)
 #' 
 #' @docType data
 #' 
