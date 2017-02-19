@@ -25,7 +25,7 @@
 #'  group = group,
 #'  group.size = group.size,
 #'  colours = colours,
-#'  shape = circle",
+#'  shape = "circle",
 #'  seed = 50)
 #' 
 #' @return Packages loaded into R
