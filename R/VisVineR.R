@@ -9,6 +9,8 @@
 #' @examples 
 #' 
 #' load_pkg(c("dplyr", "visNetwork", "tidyr", "VineCopula"))
+#' data("RVM")
+#' data("Market_info")
 #' 
 #' group <- Market_info$Hanjo.Industry %>% as.character()
 #' group.size <-  
@@ -22,9 +24,8 @@
 #'  RVM,
 #'  group = group,
 #'  group.size = group.size,
-#'  seed = seed,
 #'  colours = colours,
-#'  shape = shape,
+#'  shape = circle",
 #'  seed = 50)
 #' 
 #' @return Packages loaded into R
