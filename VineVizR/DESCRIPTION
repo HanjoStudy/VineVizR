@@ -1,0 +1,14 @@
+Package: VineVizR
+Type: Package
+Title: Basic integration of VizNetworks with VineCopula
+Version: 1.2
+Authors: c(person("Hanjo", "Odendaal", email = "hanjo@eighty20.co.za", role = c("aut", "cre")))
+Depends:
+    R (>= 2.15.0)
+Imports:
+    dplyr, tidyr, visNetwork, VineCopula
+Description: This package provides users with a quick means of visually investigating RVineMatrix structures from 
+  the VineCopula. The package provides the capability of incorporating meta data for visual inference of the data  
+License: GPL-3
+LazyData: TRUE
+RoxygenNote: 5.0.1
